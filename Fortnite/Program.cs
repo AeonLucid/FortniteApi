@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FortniteApi;
-using Newtonsoft.Json;
 
 namespace Fortnite
 {
@@ -12,9 +10,21 @@ namespace Fortnite
 
         private static async Task Run()
         {
+            await DoStuff();
+            await DoStuff();
+            await DoStuff();
+            await DoStuff();
+
+            Console.WriteLine("Finished.");
+            Console.ReadKey();
+        }
+
+        private static async Task DoStuff()
+        {
             using (var client = new FortniteClient())
             {
                 Console.WriteLine("Authenticating..");
+
                 await client.AuthenticateAsync(
                     Environment.GetEnvironmentVariable("EG_EMAIL"),
                     Environment.GetEnvironmentVariable("EG_PASSWORD")
@@ -31,14 +41,11 @@ namespace Fortnite
 
                 foreach (var player in players)
                 {
-                    var playerResponse = await client.GetPlayerAsync(player);
+                    await client.GetPlayerAsync(player);
 
-                    Console.WriteLine(JsonConvert.SerializeObject(playerResponse, Formatting.Indented));
+                    Console.WriteLine($"Looked up {player}");
                 }
             }
-
-            Console.WriteLine("Finished.");
-            Console.ReadKey();
         }
     }
 }

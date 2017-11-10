@@ -12,7 +12,7 @@ namespace FortniteApi.Response.Account
         public int ExpiresIn { get; set; }
 
         [JsonProperty("expires_at")]
-        public DateTime ExpiresAt { get; set; }
+        public DateTimeOffset ExpiresAt { get; set; }
 
         [JsonProperty("token_type")]
         public string TokenType { get; set; }
@@ -24,7 +24,7 @@ namespace FortniteApi.Response.Account
         public int RefreshExpires { get; set; }
 
         [JsonProperty("refresh_expires_at")]
-        public DateTime RefreshExpiresAt { get; set; }
+        public DateTimeOffset RefreshExpiresAt { get; set; }
 
         [JsonProperty("account_id")]
         public string AccountId { get; set; }

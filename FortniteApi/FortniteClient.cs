@@ -31,6 +31,16 @@ namespace FortniteApi
         #region Authentication
         public async Task<bool> AuthenticateAsync(string email, string password)
         {
+            if (FortniteCache.FortniteToken != null && (
+                FortniteCache.FortniteToken.ExpiresAt.UtcDateTime - TimeSpan.FromHours(1) > DateTime.UtcNow ||
+                FortniteCache.FortniteToken.RefreshExpiresAt.UtcDateTime - TimeSpan.FromHours(1) > DateTime.UtcNow))
+            {
+                // Fortnite token or refresh token is still active.
+                return true;
+            }
+
+            FortniteCache.FortniteToken = null;
+
             if (_token != null)
             {
                 throw new FortniteException("This FortniteClient instance is already authenticated with UE.");
@@ -69,6 +79,36 @@ namespace FortniteApi
 
         public async Task<bool> ExchangeTokenAsync()
         {
+            if (FortniteCache.FortniteToken != null && 
+                FortniteCache.FortniteToken.ExpiresAt.UtcDateTime - TimeSpan.FromMinutes(65) > DateTime.UtcNow)
+            {
+                // Fortnite token is still active.
+                _tokenFortnite = FortniteCache.FortniteToken;
+                return true;
+            }
+
+            if (FortniteCache.FortniteToken != null &&
+                FortniteCache.FortniteToken.RefreshExpiresAt.UtcDateTime - TimeSpan.FromMinutes(65) > DateTime.UtcNow)
+            {
+                // Fortnite refresh token is still active.
+                var responseThree = await Fortnite.UrlAuthenticate.WithClient(_client)
+                    .WithHeader("User-Agent", Fortnite.UserAgentFortnite)
+                    .WithHeader("Pragma", "no-cache")
+                    .WithBasicAuth("ec684b8c687f479fadea3cb2ad83f5c6", "e1f31c211f28413186262d37a13fc84d") // Constants?
+                    .PostUrlEncodedAsync(new Dictionary<string, string>
+                    {
+                        {"grant_type", "refresh_token"},
+                        {"refresh_token", FortniteCache.FortniteToken.RefreshToken},
+                        {"includePerms", "true"}
+                    });
+
+                var responseContentThree = await responseThree.Content.ReadAsStringAsync();
+
+                _tokenFortnite = FortniteCache.FortniteToken = JsonConvert.DeserializeObject<OAuthToken>(responseContentThree);
+
+                return true;
+            }
+
             if (_token == null)
             {
                 throw new FortniteException("This FortniteClient instance is not authenticated with UE.");
@@ -106,7 +146,7 @@ namespace FortniteApi
                 throw new FortniteAuthException("Unable to exchange tokens at Fortnite.", errorData);
             }
 
-            _tokenFortnite = JsonConvert.DeserializeObject<OAuthToken>(responseContent);
+            _tokenFortnite = FortniteCache.FortniteToken = JsonConvert.DeserializeObject<OAuthToken>(responseContent);
 
             return true;
         }
