@@ -11,9 +11,6 @@ namespace Fortnite
         private static async Task Run()
         {
             await DoStuff();
-            await DoStuff();
-            await DoStuff();
-            await DoStuff();
 
             Console.WriteLine("Finished.");
             Console.ReadKey();
@@ -36,7 +33,14 @@ namespace Fortnite
                 Console.WriteLine("Looking up player ids..");
                 var players = new[]
                 {
-                    "AeonLuciid"
+                    "AeonLuciid",
+                    "swekkerdekker",
+                    "ArtieNL",
+                    "ilo274",
+                    "Noobtubejoep",
+                    "Lamawarrior",
+                    "whaaal",
+                    "Jaldro"
                 };
 
                 foreach (var player in players)
