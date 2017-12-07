@@ -1,0 +1,26 @@
+# Version will be manually specified through RLSApi\RLSApi.csproj instead of CI versioning.
+
+branches:
+  only:
+  - master
+
+assembly_info:
+  patch: false
+
+configuration: Release
+
+environment:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+before_build:
+  - appveyor-retry dotnet restore "src" -v Minimal
+
+build_script:
+  - dotnet build "src\Fortnite" -c Release
+  - dotnet build "src\FortniteApi" -c Release
+  
+after_build:
+  - dotnet pack "src\FortniteApi" -c Release --no-build -o artifacts
+  
+artifacts:
+  - path: .\**\artifacts\*.nupkg
