@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http;
+using FortniteApi.Cache;
+using FortniteApi.Cache.Handlers;
 using FortniteApi.Data;
 using FortniteApi.Exceptions;
 using FortniteApi.Response.Account;
@@ -13,33 +15,55 @@ namespace FortniteApi
 {
     public class FortniteClient : IDisposable
     {
+        private readonly string _email;
+
+        private readonly IFortniteCacheHandler _cacheHandler;
+
         private readonly FlurlClient _client;
+
+        private FortniteCache _cache;
 
         private OAuthToken _token;
 
         private OAuthToken _tokenFortnite;
         
-        public FortniteClient()
+        public FortniteClient(string email, IFortniteCacheHandler cacheHandler = null)
         {
+            _email = email;
+            _cacheHandler = cacheHandler;
             _client = new FlurlClient();
             _client.Configure(settings =>
             {
                 settings.AllowedHttpStatusRange = "400";
             });
+
+            LoadCache();
         }
 
-        #region Authentication
-        public async Task<bool> AuthenticateAsync(string email, string password)
+        #region Cache
+        private void LoadCache()
         {
-            if (FortniteCache.FortniteToken != null && (
-                FortniteCache.FortniteToken.ExpiresAt.UtcDateTime - TimeSpan.FromHours(1) > DateTime.UtcNow ||
-                FortniteCache.FortniteToken.RefreshExpiresAt.UtcDateTime - TimeSpan.FromHours(1) > DateTime.UtcNow))
+            _cache = _cacheHandler != null ? _cacheHandler.Load(_email) : new FortniteCache();
+        }
+
+        private void SaveCache()
+        {
+            _cacheHandler?.Save(_email, _cache);
+        }
+        #endregion
+
+        #region Authentication
+        public async Task<bool> AuthenticateAsync(string password)
+        {
+            if (_cache.FortniteToken != null && (
+                    _cache.FortniteToken.ExpiresAt.UtcDateTime - TimeSpan.FromHours(1) > DateTime.UtcNow ||
+                    _cache.FortniteToken.RefreshExpiresAt.UtcDateTime - TimeSpan.FromHours(1) > DateTime.UtcNow))
             {
                 // Fortnite token or refresh token is still active.
                 return true;
             }
 
-            FortniteCache.FortniteToken = null;
+            _cache.FortniteToken = null;
 
             if (_token != null)
             {
@@ -53,7 +77,7 @@ namespace FortniteApi
                 .PostUrlEncodedAsync(new Dictionary<string, string>
                 {
                     {"grant_type", "password"},
-                    {"username", email},
+                    {"username", _email},
                     {"password", password},
                     {"includePerms", "true"}
                 });
@@ -79,16 +103,16 @@ namespace FortniteApi
 
         public async Task<bool> ExchangeTokenAsync()
         {
-            if (FortniteCache.FortniteToken != null && 
-                FortniteCache.FortniteToken.ExpiresAt.UtcDateTime - TimeSpan.FromMinutes(65) > DateTime.UtcNow)
+            if (_cache.FortniteToken != null &&
+                _cache.FortniteToken.ExpiresAt.UtcDateTime - TimeSpan.FromMinutes(65) > DateTime.UtcNow)
             {
                 // Fortnite token is still active.
-                _tokenFortnite = FortniteCache.FortniteToken;
+                _tokenFortnite = _cache.FortniteToken;
                 return true;
             }
 
-            if (FortniteCache.FortniteToken != null &&
-                FortniteCache.FortniteToken.RefreshExpiresAt.UtcDateTime - TimeSpan.FromMinutes(65) > DateTime.UtcNow)
+            if (_cache.FortniteToken != null &&
+                _cache.FortniteToken.RefreshExpiresAt.UtcDateTime - TimeSpan.FromMinutes(65) > DateTime.UtcNow)
             {
                 // Fortnite refresh token is still active.
                 var responseThree = await Fortnite.UrlAuthenticate.WithClient(_client)
@@ -98,13 +122,13 @@ namespace FortniteApi
                     .PostUrlEncodedAsync(new Dictionary<string, string>
                     {
                         {"grant_type", "refresh_token"},
-                        {"refresh_token", FortniteCache.FortniteToken.RefreshToken},
+                        {"refresh_token", _cache.FortniteToken.RefreshToken},
                         {"includePerms", "true"}
                     });
 
                 var responseContentThree = await responseThree.Content.ReadAsStringAsync();
 
-                _tokenFortnite = FortniteCache.FortniteToken = JsonConvert.DeserializeObject<OAuthToken>(responseContentThree);
+                _tokenFortnite = _cache.FortniteToken = JsonConvert.DeserializeObject<OAuthToken>(responseContentThree);
 
                 return true;
             }
@@ -146,7 +170,9 @@ namespace FortniteApi
                 throw new FortniteAuthException("Unable to exchange tokens at Fortnite.", errorData);
             }
 
-            _tokenFortnite = FortniteCache.FortniteToken = JsonConvert.DeserializeObject<OAuthToken>(responseContent);
+            _tokenFortnite = _cache.FortniteToken = JsonConvert.DeserializeObject<OAuthToken>(responseContent);
+            
+            SaveCache();
 
             return true;
         }
@@ -160,9 +186,9 @@ namespace FortniteApi
                 throw new FortniteException("This FortniteClient instance is not authenticated with Fortnite.");
             }
 
-            if (FortniteCache.LookupCache.ContainsKey(displayName.ToLower()))
+            if (_cache.LookupCache.ContainsKey(displayName.ToLower()))
             {
-                return FortniteCache.LookupCache[displayName.ToLower()];
+                return _cache.LookupCache[displayName.ToLower()];
             }
 
             var response = await Fortnite.UrlAccountLookup.WithClient(_client)
@@ -183,7 +209,7 @@ namespace FortniteApi
 
             var responseData = JsonConvert.DeserializeObject<LookupResponse>(responseContent);
 
-            FortniteCache.LookupCache.Add(displayName.ToLower(), responseData);
+            _cache.LookupCache.Add(displayName.ToLower(), responseData);
 
             return responseData;
         }
@@ -212,6 +238,8 @@ namespace FortniteApi
 
         public void Dispose()
         {
+            SaveCache();
+
             _client.Dispose();
         }
     }

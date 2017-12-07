@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FortniteApi", "FortniteApi\FortniteApi.csproj", "{9F67E60E-99A5-4C4F-BCB1-5D970FEE0034}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fortnite", "Fortnite\Fortnite.csproj", "{391B265D-2694-470A-83D0-5E69E0AB7288}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testings", "Testings", "{EC821DC1-48DC-4323-B80F-96098302376B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{391B265D-2694-470A-83D0-5E69E0AB7288} = {EC821DC1-48DC-4323-B80F-96098302376B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2669F389-1C9C-47E3-9549-CC3BA0459CB8}

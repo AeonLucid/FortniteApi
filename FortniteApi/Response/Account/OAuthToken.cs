@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace FortniteApi.Response.Account
 {
-    internal class OAuthToken
+    public class OAuthToken
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }

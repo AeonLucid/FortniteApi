@@ -1,14 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using FortniteApi;
+using FortniteApi.Cache.Handlers;
 
 namespace Fortnite
 {
     internal class Program
     {
-        public static void Main(string[] args) => Run().GetAwaiter().GetResult();
-
-        private static async Task Run()
+        public static async Task Main()
         {
             await DoStuff();
 
@@ -18,14 +18,13 @@ namespace Fortnite
 
         private static async Task DoStuff()
         {
-            using (var client = new FortniteClient())
+            var rootDir = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+            var cacheHandler = new FileCacheHandler(Path.Combine(rootDir, "cache"));
+
+            using (var client = new FortniteClient(Environment.GetEnvironmentVariable("EG_EMAIL"), cacheHandler))
             {
                 Console.WriteLine("Authenticating..");
-
-                await client.AuthenticateAsync(
-                    Environment.GetEnvironmentVariable("EG_EMAIL"),
-                    Environment.GetEnvironmentVariable("EG_PASSWORD")
-                );
+                await client.AuthenticateAsync(Environment.GetEnvironmentVariable("EG_PASSWORD"));
 
                 Console.WriteLine("Exchanging tokens..");
                 await client.ExchangeTokenAsync();
@@ -34,20 +33,14 @@ namespace Fortnite
                 var players = new[]
                 {
                     "AeonLuciid",
-                    "swekkerdekker",
-                    "ArtieNL",
-                    "ilo274",
-                    "Noobtubejoep",
-                    "Lamawarrior",
-                    "whaaal",
-                    "Jaldro"
+                    "AeonLucidUtil"
                 };
 
                 foreach (var player in players)
                 {
-                    await client.GetPlayerAsync(player);
+                    Console.WriteLine($"Looking up {player}");
 
-                    Console.WriteLine($"Looked up {player}");
+                    await client.GetPlayerAsync(player);
                 }
             }
         }
