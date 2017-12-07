@@ -1,6 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>AeonLucid</Authors>
+    <Description>An unofficial C# client library for the unofficial Fortnite API.</Description>
+    <RepositoryUrl>https://github.com/AeonLucid/FortniteApi</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>fortnite;fortniteapi;epic games</PackageTags>
+    <PackageIconUrl>https://i.imgur.com/hJPVKUu.jpg</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/AeonLucid/FortniteApi</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/AeonLucid/FortniteApi/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>AeonLucid</Copyright>
+    <Version>1.0.1</Version>
+    <Product>FortniteApi</Product>
+    <Company>AeonLucid</Company>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="2.0.1" />
