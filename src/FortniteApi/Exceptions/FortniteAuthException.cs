@@ -1,14 +1,9 @@
-﻿using FortniteApi.Response.Account;
-
-namespace FortniteApi.Exceptions
+﻿namespace FortniteApi.Exceptions
 {
     public class FortniteAuthException : FortniteException
     {
-        public FortniteAuthException(string message, OAuthTokenError error) : base(message)
+        public FortniteAuthException(string message) : base(message)
         {
-            Error = error;
         }
-
-        public OAuthTokenError Error { get; }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using FortniteApi;
-using FortniteApi.Cache.Handlers;
+using FortniteApi.Data;
 
 namespace Fortnite
 {
@@ -10,6 +9,9 @@ namespace Fortnite
     {
         public static async Task Main()
         {
+            Console.Title = "Fortnite";
+            Console.ForegroundColor = ConsoleColor.White;
+
             await DoStuff();
 
             Console.WriteLine("Finished.");
@@ -18,17 +20,8 @@ namespace Fortnite
 
         private static async Task DoStuff()
         {
-            var rootDir = Path.GetDirectoryName(typeof(Program).Assembly.Location);
-            var cacheHandler = new FileCacheHandler(Path.Combine(rootDir, "cache"));
-
-            using (var client = new FortniteClient(Environment.GetEnvironmentVariable("EG_EMAIL"), cacheHandler))
+            using (var client = new FortniteClient(Environment.GetEnvironmentVariable("TRN_KEY")))
             {
-                Console.WriteLine("Authenticating..");
-                await client.AuthenticateAsync(Environment.GetEnvironmentVariable("EG_PASSWORD"));
-
-                Console.WriteLine("Exchanging tokens..");
-                await client.ExchangeTokenAsync();
-
                 Console.WriteLine("Looking up player ids..");
                 var players = new[]
                 {
@@ -40,7 +33,9 @@ namespace Fortnite
                 {
                     Console.WriteLine($"Looking up {player}");
 
-                    await client.GetPlayerAsync(player);
+                    var response = await client.FindPlayerAsync(Platform.Pc, player);
+
+                    var soloKills = response.Stats[Playlist.Solo][Stat.Kills].ValueInt;
                 }
             }
         }

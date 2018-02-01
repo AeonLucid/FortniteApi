@@ -3,9 +3,7 @@ RLSApi
 [![NuGet](https://img.shields.io/nuget/v/FortniteApi.svg?maxAge=60)](https://www.nuget.org/packages/FortniteApi)
 ===================
 
-This is an unofficial C# client library for the unofficial Fortnite API.
-
-> **Please make use of the caching functionality and do not abuse the API. It is unclear whether Epic Games is okay with this yet.**
+This library makes use of https://fortnitetracker.com/site-api. Make sure to request an API key there and follow their guidelines.
 
 ## Installation
 
