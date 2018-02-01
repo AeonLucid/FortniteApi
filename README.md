@@ -1,4 +1,4 @@
-RLSApi 
+FortniteApi 
 [![AppVeyor](https://img.shields.io/appveyor/ci/AeonLucid/FortniteApi/master.svg?maxAge=60)](https://ci.appveyor.com/project/AeonLucid/FortniteApi) 
 [![NuGet](https://img.shields.io/nuget/v/FortniteApi.svg?maxAge=60)](https://www.nuget.org/packages/FortniteApi)
 ===================
