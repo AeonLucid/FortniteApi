@@ -3,7 +3,8 @@ FortniteApi
 [![NuGet](https://img.shields.io/nuget/v/FortniteApi.svg?maxAge=60)](https://www.nuget.org/packages/FortniteApi)
 ===================
 
-This library makes use of https://fortnitetracker.com/site-api. Make sure to request an API key there and follow their guidelines.
+This library makes use of https://fortnitetracker.com/site-api.  
+Make sure to request an API key there and follow their guidelines.
 
 ## Installation
 
