@@ -94,21 +94,21 @@
         /// </summary>
         public const string Kills = "kills";
 
-        /// <summary>
-        ///     Playlists:
-        ///         - solo
-        ///         - duo
-        ///         - squad
-        /// </summary>
-        public const string MinutesPlayed = "minutesPlayed";
+        // /// <summary>
+        // ///     Playlists:
+        // ///         - solo
+        // ///         - duo
+        // ///         - squad
+        // /// </summary>
+        // public const string MinutesPlayed = "minutesPlayed";
 
-        /// <summary>
-        ///     Playlists:
-        ///         - solo
-        ///         - duo
-        ///         - squad
-        /// </summary>
-        public const string KillsPerMinute = "kpm";
+        // /// <summary>
+        // ///     Playlists:
+        // ///         - solo
+        // ///         - duo
+        // ///         - squad
+        // /// </summary>
+        // public const string KillsPerMinute = "kpm";
 
         /// <summary>
         ///     Playlists:
@@ -134,12 +134,12 @@
         /// </summary>
         public const string ScorePerMatch = "scorePerMatch";
 
-        /// <summary>
-        ///     Playlists:
-        ///         - solo
-        ///         - duo
-        ///         - squad
-        /// </summary>
-        public const string ScorePerMin = "scorePerMin";
+        // /// <summary>
+        // ///     Playlists:
+        // ///         - solo
+        // ///         - duo
+        // ///         - squad
+        // /// </summary>
+        // public const string ScorePerMin = "scorePerMin";
     }
 }

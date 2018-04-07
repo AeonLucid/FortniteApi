@@ -87,5 +87,9 @@ namespace FortniteApi.Response
 
         [JsonProperty("platform")]
         public int PlatformId { get; set; }
+
+        public double TrnRating { get; set; }
+
+        public double TrnRatingChange { get; set; }
     }
 }

@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/AeonLucid/FortniteApi</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/AeonLucid/FortniteApi/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright>AeonLucid</Copyright>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Product>FortniteApi</Product>
     <Company>AeonLucid</Company>
   </PropertyGroup>
